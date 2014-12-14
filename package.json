@@ -1,0 +1,34 @@
+{
+  "name": "simple-sitemap",
+  "version": "0.0.1",
+  "description": "A simple sitemap module that supports sites larger than 50,000 pages and automatically submits to Bing and Google.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "package.json"
+  ],
+  "keywords": ["sitemaps", "sitemap", "create sitemap", "submit to Google", "submit to Bing"],
+  "homepage": "https://github.com/fetchlogic/simple-sitemap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fetchlogic/simple-sitemap"
+  },
+  "bugs": "https://github.com/fetchlogic/simple-sitemap/issues",
+  "author": "Justin Davis (http://justindavis.co)",
+  "contributors" : [
+    {
+      "name": "Josh Sherman",
+      "url": "http://joshtronic.com"
+    }
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "async": "^0.9.0",
+    "xhr2": "0.1.0",
+    "util": "0.10.3"
+  }
+}
