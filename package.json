@@ -1,6 +1,6 @@
 {
   "name": "simple-sitemap",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple sitemap module that supports sites larger than 50,000 pages and automatically submits to Bing and Google.",
   "main": "index.js",
   "scripts": {

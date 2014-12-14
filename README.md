@@ -39,7 +39,9 @@ The module has the following methods:
 * `changeFrequency` (String | optional, default: `"Daily"`) - change frequency for the page. Check [sitemaps.org](http://www.sitemaps.org/protocol.html) for valid values.
 * `priority` (Float | optional, default: `0.5`) - a number between 0 and 1.0 indicating the priority of this URL. Check [sitemaps.org](http://www.sitemaps.org/protocol.html) for more details on this number.
 
-`.flush` - writes the sitemap to disk and submits to Google and Bing. Generally, you'll want to call this once you're finished adding URLs to the sitemap. This method is used internally to automagically handle writing sitemaps to disk in the case of sites with more thatn 50,000 pages.
+`.flush(callback)` - writes the sitemap to disk and submits to Google and Bing. Generally, you'll want to call this once you're finished adding URLs to the sitemap. This method is used internally to automagically handle writing sitemaps to disk in the case of sites with more thatn 50,000 pages.
+
+Takes a callback that will run when it's finished submitting to Google and Bing. 
 
 ### Other Tidbits of Interest
 
