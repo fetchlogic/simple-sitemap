@@ -8,7 +8,7 @@ This is a simple sitemap module that allows an easy way of adding pages to a sit
 
 ### Usage
 
-The constructor takes two arguments, your site's root domain, an distribution path and an optional dryRun param. If you don't specify a dryRun param, the sitemaps will be submitted to all search engines.
+The constructor takes three arguments, your site's root domain, an distribution path and an optional dryRun param. If you don't specify a dryRun param, the sitemaps will be submitted to all search engines.
 
 ~~~javascript
 
