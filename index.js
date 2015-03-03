@@ -23,7 +23,7 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
   }
 
   this.pages   = [];
-  this.sitemap = 1;
+  this.sitemapCount = 1;
   this.robots  = [];
 
   this.searchEngines = [
@@ -48,11 +48,69 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
     });
 
     if (this.pages.length >= 50000) {
-      this.flush();
+      this._flush();
     }
   },
+  // called in the end when all pages are added
   this.flush = function(callback) {
-    util.log('Flushing sitemap #' + this.sitemap + ' to disk');
+
+    var lastmod = (new Date()).toISOString();
+    this._flush();
+
+    var xml = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ].join('');
+
+    for (var i = 1; i < this.sitemapCount; i++) {
+      var filename = 'sitemap-';
+      if (this.sitemapCount < 10) {
+        filename += '0';
+      }
+      filename += i + '.xml';
+      xml += [
+        '<sitemap>',
+        '<loc>' + siteURL + '/' + filename + '</loc>',
+        '<lastmod>' + lastmod + '</lastmod>',
+        '</sitemap>'
+      ].join('');
+
+    }
+    xml += '</sitemapindex>';
+    util.log('Flushing sitemapindex to disk');
+    fs.writeFileSync(siteDistPath + '/sitemapindex.xml', xml);
+
+    if (true === dryRun) {
+      if(callback){
+        callback();
+      }
+      return;
+    }
+
+    // Submit sitemapindex to the search engines
+
+    async.each(this.searchEngines, function(target, callback){
+      var req = new AjaxRequest();
+      req.onload = function(e){
+        if(req.status == "200"){
+          util.log("Submitted sitemapindex to " + target.name);
+        } else {
+          util.log("Sorry, there was a problem submitting your sitemapindex to " + target.name);
+        }
+        callback();
+      }
+      req.open("GET", "http://"+target.URL+"/ping?sitemap=http://" + siteURL + "/sitemapindex.xml", true);
+      req.send();
+    }, function(){
+      if(callback){
+        callback();
+      }
+    });
+  },
+
+
+  this._flush = function(callback) {
+    util.log('Flushing sitemap #' + this.sitemapCount + ' to disk');
 
     var xml = [
       '<?xml version="1.0" encoding="UTF-8"?>',
@@ -62,9 +120,9 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
     this.pages.forEach(function(page) {
       xml += [
         '<url>',
-          '<loc>' + page.url + '</loc>',
-          '<changefreq>' + page.changeFreq + '</changefreq>',
-          '<priority>' + page.priority + '</priority>',
+        '<loc>' + page.url + '</loc>',
+        '<changefreq>' + page.changeFreq + '</changefreq>',
+        '<priority>' + page.priority + '</priority>',
         '</url>',
       ].join('');
     });
@@ -73,40 +131,16 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
 
     var filename = '/sitemap-';
 
-    if (this.sitemap < 10) {
+    if (this.sitemapCount < 10) {
       filename += '0';
     }
 
-    filename += this.sitemap + '.xml';
+    filename += this.sitemapCount + '.xml';
 
     fs.writeFileSync(siteDistPath + filename, xml);
 
     this.pages = [];
-    this.sitemap++;
-
-    if (true === dryRun) {
-      return;
-    }
-
-    // Submit sitemap to the search engines
-
-    async.each(this.searchEngines, function(target, callback){
-      var req = new AjaxRequest();
-      req.onload = function(e){
-        if(req.status == "200"){
-          util.log("Submitted sitemap to " + target.name);
-        } else {
-          util.log("Sorry, there was a problem submitting your sitemap to " + target.name);
-        }
-        callback();
-      }
-      req.open("GET", "http://"+target.URL+"/ping?sitemap=http://" + siteURL + "/" + filename, true);
-      req.send();
-    }, function(){
-      if(callback){
-        callback();
-      }
-    });
+    this.sitemapCount++;
 
   }
 };
