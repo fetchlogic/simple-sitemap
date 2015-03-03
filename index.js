@@ -5,10 +5,21 @@ var util            = require('util');
 var AjaxRequest     = require('xhr2');
 var async           = require('async');
 
-module.exports = function Sitemap(siteURL, siteDistPath) {
+/**
+ *
+ * @param {string} siteURL
+ * @param {string} siteDistPath
+ * @param {boolean} dryRun
+ * @constructor
+ */
+module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
 
   if(!siteDistPath){
     siteDistPath = "/";
+  }
+
+  if (!dryRun) {
+    dryRun = false;
   }
 
   this.pages   = [];
@@ -70,6 +81,13 @@ module.exports = function Sitemap(siteURL, siteDistPath) {
 
     fs.writeFileSync(siteDistPath + filename, xml);
 
+    this.pages = [];
+    this.sitemap++;
+
+    if (true === dryRun) {
+      return;
+    }
+
     // Submit sitemap to the search engines
 
     async.each(this.searchEngines, function(target, callback){
@@ -79,7 +97,7 @@ module.exports = function Sitemap(siteURL, siteDistPath) {
           util.log("Submitted sitemap to " + target.name);
         } else {
           util.log("Sorry, there was a problem submitting your sitemap to " + target.name);
-        }  
+        }
         callback();
       }
       req.open("GET", "http://"+target.URL+"/ping?sitemap=http://" + siteURL + "/" + filename, true);
@@ -90,7 +108,5 @@ module.exports = function Sitemap(siteURL, siteDistPath) {
       }
     });
 
-    this.pages = [];
-    this.sitemap++;
   }
 };
