@@ -77,8 +77,8 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
 
     }
     xml += '</sitemapindex>';
-    util.log('Flushing sitemapindex to disk');
-    fs.writeFileSync(siteDistPath + '/sitemapindex.xml', xml);
+    util.log('Flushing sitemap-index to disk');
+    fs.writeFileSync(siteDistPath + '/sitemap-index.xml', xml);
 
     if (true === dryRun) {
       if(callback){
@@ -99,7 +99,7 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
         }
         callback();
       }
-      req.open("GET", "http://"+target.URL+"/ping?sitemap=http://" + siteURL + "/sitemapindex.xml", true);
+      req.open("GET", "http://"+target.URL+"/ping?sitemap=http://" + siteURL + "/sitemap-index.xml", true);
       req.send();
     }, function(){
       if(callback){
