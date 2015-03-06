@@ -8,7 +8,7 @@ This is a simple sitemap module that allows an easy way of adding pages to a sit
 
 ### Usage
 
-The constructor takes two arguments, your site's root domain, and an optional distribution path. If you don't specify a distribution path, the script will write the sitemap(s) to root by default.
+The constructor takes three arguments, your site's root domain, an distribution path and an optional dryRun param. If you don't specify a dryRun param, the sitemaps will be submitted to all search engines.
 
 ~~~javascript
 
@@ -16,7 +16,8 @@ var Sitemap = require('simple-sitemap');
 
 // Set up the Sitemap module
 
-var sitemap = new Sitemap("www.yourdomain.com", "/dist");
+var dryRun = true; // only create sitemaps without submitting to search engines
+var sitemap = new Sitemap("www.yourdomain.com", "/dist", dryRun);
 
 // Add a page to the sitemap
 
@@ -41,11 +42,8 @@ The module has the following methods:
 
 `.flush(callback)` - writes the sitemap to disk and submits to Google and Bing. Generally, you'll want to call this once you're finished adding URLs to the sitemap. This method is used internally to automagically handle writing sitemaps to disk in the case of sites with more thatn 50,000 pages.
 
-Takes a callback that will run when it's finished submitting to Google and Bing. 
+Takes a callback that will run when it's finished submitting to Google and Bing.
 
 ### Other Tidbits of Interest
 
 Sitemaps are named with a count appended to the end of the filename by default. For example, most small sites will end up with a sitemap called `sitemap-01.xml`. This appended value will increase based on the number of sitemaps automatically created.
-
-
-
