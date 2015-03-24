@@ -21,6 +21,10 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
   if (!dryRun) {
     dryRun = false;
   }
+  
+  if (!/^(f|ht)tps?:\/\//i.test(siteURL)) {
+      siteURL = "http://" + siteURL;
+  }
 
   this.pages   = [];
   this.sitemapCount = 1;
@@ -99,7 +103,7 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
         }
         callback();
       }
-      req.open("GET", "http://"+target.URL+"/ping?sitemap=http://" + siteURL + "/sitemap-index.xml", true);
+      req.open("GET", "http://"+target.URL+"/ping?sitemap=" + siteURL + "/sitemap-index.xml", true);
       req.send();
     }, function(){
       if(callback){
